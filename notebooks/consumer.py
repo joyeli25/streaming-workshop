@@ -39,7 +39,15 @@ for message in consumer:
     cur.execute(
         """INSERT INTO processed_events
            (PULocationID, DOLocationID, trip_distance, total_amount, pickup_datetime)
-           VALUES (%s, %s, %s, %s, %s)""",
+           VALUES (%s, %s, %s, %s, %s)
+           ON CONFLICT (
+                PULocationID,
+                DOLocationID,
+                trip_distance,
+                total_amount,
+                pickup_datetime
+            ) DO NOTHING
+            """,
         (ride.PULocationID, ride.DOLocationID,
          ride.trip_distance, ride.total_amount, pickup_dt)
     )
